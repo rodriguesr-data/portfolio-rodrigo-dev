@@ -1,27 +1,59 @@
-import { motion } from "framer-motion"
+import { useEffect, useRef, useState } from "react"
 
 function Hero() {
+  const ref = useRef()
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.3 }
+    )
+
+    observer.observe(ref.current)
+
+    return () => observer.disconnect()
+  }, [])
+
   return (
-    <motion.section
-      id="hero"
-      className="hero"
-      initial={{ opacity: 0, y: 80 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1 }}
-    >
-      <h1>
-        Olá, eu sou <span>Rodrigo</span>
-      </h1>
+    <section className="hero">
+      <div
+        ref={ref}
+        className={`hero-content fade-in ${visible ? "show" : ""}`}
+      >
+        <h1>
+          Olá, eu sou <span>Rodrigo</span>
+        </h1>
 
-      <p>
-        Desenvolvedor focado em Node.js, dados e automação.
-      </p>
+        <h2>
+          Desenvolvedor focado em Web, Dados e Automação
+        </h2>
 
-      <div className="hero-buttons">
-        <a href="#projects" className="btn">Ver Projetos</a>
-        <a href="#" className="btn-outline">GitHub</a>
+        <p>
+          Construindo projetos reais enquanto evoluo minhas habilidades em
+          programação e tecnologia.
+        </p>
+
+        <div className="hero-buttons">
+          <a href="#projects" className="btn">
+            Ver Projetos
+          </a>
+
+          <a
+            href="https://github.com"
+            target="_blank"
+            className="btn-outline"
+          >
+            GitHub
+          </a>
+        </div>
       </div>
-    </motion.section>
+    </section>
   )
 }
 
